@@ -8,7 +8,7 @@ namespace Glamperio.Models
     interface ICampRepository
     {
         public IEnumerable<Campgrounds> GetAllCampgrounds();
-        public Campgrounds GetCampgrounds();
+        public Campgrounds GetCampgrounds(string CampsiteName);
        
 
     }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Dapper;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,14 +9,22 @@ namespace Glamperio.Models
 {
     public class CampRepository : ICampRepository
     {
-        public IEnumerable<Campgrounds> GetAllCampgrounds()
+        private readonly IDbConnection _conn;
+        public CampRepository(IDbConnection conn)
         {
-            throw new NotImplementedException();
+            _conn = conn;
         }
 
-        public Campgrounds GetCampgrounds()
+        public IEnumerable<Campgrounds> GetAllCampgrounds()
         {
-            throw new NotImplementedException();
+            return _conn.Query<Campgrounds>("SELECT media_api_v1.description, campsites.campsitelongitude, campsites.CampsiteLatitude, campsites.CampsiteName, media_api_v1.Title, media_api_v1.URL FROM campsites INNER JOIN media_api_v1 ON media_api_v1.EntityID = campsites.FacilityID; ");
+        }
+
+        public Campgrounds GetCampgrounds(string CampsiteName)
+        {
+            return (Campgrounds)_conn.Query<Campgrounds>("SELECT media_api_v1.description, campsites.campsitelongitude, campsites.CampsiteLatitude, campsites.CampsiteName, media_api_v1.Title, media_api_v1.URL FROM campsites INNER JOIN media_api_v1 ON media_api_v1.EntityID = campsites.FacilityID WHERE CAMPSITENAME = @CampsiteName");
+               
+
         }
     }
 }
